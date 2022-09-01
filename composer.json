@@ -1,0 +1,58 @@
+{
+    "name": "spiriit/composer-write-changelogs",
+    "type": "composer-plugin",
+    "description": "Display and write to textual files changelogs after each composer update",
+    "keywords": [
+        "composer",
+        "plugin",
+        "update",
+        "changelog",
+        "files"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dev Spiriit",
+            "email": "dev@spiriit.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "composer-plugin-api": "^1.0 || ^2.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "composer/composer": "^1.0.0-alpha10@dev || ^2.0@dev",
+        "composer/semver": "^1.2 || ^2.0 || ^3.2",
+        "ekino/phpstan-banned-code": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "infection/infection": "^0.26.13",
+        "phpstan/phpstan": "^1.8",
+        "symfony/phpunit-bridge": "^5.2"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
+    },
+    "extra": {
+        "class": "Spiriit\\ComposerWriteChangelogs\\ChangelogsPlugin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiriit\\ComposerWriteChangelogs\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiriit\\ComposerWriteChangelogs\\tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "cs": "vendor/bin/php-cs-fixer fix --verbose",
+        "test": "vendor/bin/simple-phpunit",
+        "stan": "vendor/bin/phpstan analyse",
+        "infection": "XDEBUG_MODE=coverage vendor/bin/infection"
+    }
+}

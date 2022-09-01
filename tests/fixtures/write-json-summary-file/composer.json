@@ -1,0 +1,8 @@
+{
+  "extra": {
+    "composer-write-changelogs": {
+      "changelogs-dir-path": "tests/temp",
+      "output-file-format": "json"
+    }
+  }
+}
