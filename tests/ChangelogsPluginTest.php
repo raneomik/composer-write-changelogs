@@ -14,9 +14,9 @@ namespace Spiriit\ComposerWriteChangelogs\tests;
 use Composer\Composer;
 use Composer\Config;
 use Composer\DependencyResolver\DefaultPolicy;
+use Composer\DependencyResolver\Operation\OperationInterface;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\DependencyResolver\Pool;
-use Composer\DependencyResolver\Request;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\Factory;
 use Composer\Installer\PackageEvent;
@@ -34,17 +34,13 @@ use Spiriit\ComposerWriteChangelogs\ChangelogsPlugin;
 
 class ChangelogsPluginTest extends TestCase
 {
-    /** @var BufferIO */
-    private $io;
+    private BufferIO $io;
 
-    /** @var Composer */
-    private $composer;
+    private Composer $composer;
 
-    /** @var Config */
-    private $config;
+    private Config $config;
 
-    /** @var string */
-    private $tempDir;
+    private string $tempDir;
 
     /**
      * {@inheritdoc}
@@ -52,20 +48,21 @@ class ChangelogsPluginTest extends TestCase
     protected function setUp(): void
     {
         $this->tempDir = __DIR__ . '/temp';
-        $this->config = new Config(false, realpath(__DIR__ . '/fixtures/local'));
+        $baseDir = realpath(__DIR__ . '/fixtures/local') ? realpath(__DIR__ . '/fixtures/local') : null;
+        $this->config = new Config(false, $baseDir);
         $this->config->merge([
             'config' => [
                 'home' => __DIR__,
+                'allow-plugins' => [
+                    'spiriit/composer-write-changelogs' => true,
+                ],
             ],
         ]);
 
         $this->io = new BufferIO();
-
         $this->composer = Factory::create($this->io, $this->config->raw()['config']);
-        /* $this->composer = new Composer(); */
         $this->composer->setConfig($this->config);
         $this->composer->setPackage(new RootPackage('my/project', '1.0.0', '1.0.0'));
-//        $this->composer->setLocker(new Locker($this->io,));
         $this->composer->setPluginManager(new PluginManager($this->io, $this->composer));
         $this->composer->setEventDispatcher(new EventDispatcher($this->composer, $this->io));
 
@@ -90,16 +87,20 @@ class ChangelogsPluginTest extends TestCase
             return;
         }
         $files = glob($this->tempDir . '/*');
-        foreach ($files as $file) {
-            unlink($file);
+        if (is_array($files)) {
+            foreach ($files as $file) {
+                unlink($file);
+            }
+            rmdir($this->tempDir);
         }
-        rmdir($this->tempDir);
     }
 
     /**
      * @test
+     *
+     * @throws \ReflectionException
      */
-    public function testItIsRegisteredAndActivated(): void
+    public function test_it_is_registered_and_activated(): void
     {
         $plugin = new ChangelogsPlugin();
 
@@ -110,8 +111,10 @@ class ChangelogsPluginTest extends TestCase
 
     /**
      * @test
+     *
+     * @throws \ReflectionException
      */
-    public function testItReceivesEvent(): void
+    public function test_it_receives_event(): void
     {
         $this->addComposerPlugin(new ChangelogsPlugin());
 
@@ -137,7 +140,7 @@ OUTPUT;
     /**
      * @test
      */
-    public function testEventsAreHandled(): void
+    public function test_events_are_handled(): void
     {
         $plugin = new ChangelogsPlugin();
         $plugin->activate($this->composer, $this->io);
@@ -166,7 +169,7 @@ OUTPUT;
     /**
      * @test
      */
-    public function testItWriteTextSummaryFile(): void
+    public function test_it_write_text_summary_file(): void
     {
         $this->config->merge([
             'config' => [
@@ -200,7 +203,7 @@ OUTPUT;
     /**
      * @test
      */
-    public function testItWriteJsonSummaryFile(): void
+    public function test_it_write_json_summary_file(): void
     {
         $this->config->merge([
             'config' => [
@@ -227,24 +230,20 @@ OUTPUT;
     }
 
     /**
-     * @param PluginInterface $plugin
      *
      * @throws \ReflectionException
      *
-     * @return void
      */
     private function addComposerPlugin(PluginInterface $plugin): void
     {
-        $pluginManagerReflection = new \ReflectionClass($this->composer->getPluginManager());
-        $addPluginReflection = $pluginManagerReflection->getMethod('addPlugin');
-        $addPluginReflection->setAccessible(true);
-        $addPluginReflection->invoke($this->composer->getPluginManager(), $plugin);
+        $this->composer->getPluginManager()->addPlugin($plugin, false, new Package('spiriit/composer-write-changelogs', 'v1.0.0', 'v1.0.0'));
+//        $pluginManagerReflection = new \ReflectionClass($this->composer->getPluginManager());
+//        $addPluginReflection = $pluginManagerReflection->getMethod('addPlugin');
+//        $addPluginReflection->setAccessible(true);
+//        $addPluginReflection->invoke($this->composer->getPluginManager(), $plugin, false, new Package('spiriit/composer-write-changelogs','v1.0.0', 'v1.0.0'));
     }
 
-    /**
-     * @return UpdateOperation
-     */
-    private function getUpdateOperation()
+    private function getUpdateOperation(): UpdateOperation
     {
         $initialPackage = new Package('foo/bar', '1.0.0.0', 'v1.0.0');
         $initialPackage->setSourceUrl('https://github.com/foo/bar.git');
@@ -255,12 +254,7 @@ OUTPUT;
         return new UpdateOperation($initialPackage, $targetPackage);
     }
 
-    /**
-     * @param $operation
-     *
-     * @return PackageEvent
-     */
-    private function createPostPackageUpdateEvent($operation)
+    private function createPostPackageUpdateEvent($operation): PackageEvent
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0.0') >= 0) {
             return new PackageEvent(
@@ -281,19 +275,11 @@ OUTPUT;
             false,
             new DefaultPolicy(false, false),
             new Pool(),
-            new CompositeRepository([]),
-            new Request(new Pool()),
-            [$operation],
-            $operation
+            new CompositeRepository([])
         );
     }
-
-    /**
-     * @param $operation
-     *
-     * @return void
-     */
-    private function dispatchPostPackageUpdateEvent($operation): void
+    
+    private function dispatchPostPackageUpdateEvent(OperationInterface $operation): void
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0.0') >= 0) {
             $this->composer->getEventDispatcher()->dispatchPackageEvent(
@@ -312,10 +298,7 @@ OUTPUT;
             false,
             new DefaultPolicy(false, false),
             new Pool(),
-            new CompositeRepository([]),
-            new Request(new Pool()),
-            [$operation],
-            $operation
+            new CompositeRepository([])
         );
     }
 }

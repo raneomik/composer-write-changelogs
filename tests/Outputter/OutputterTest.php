@@ -12,23 +12,18 @@
 namespace Spiriit\ComposerWriteChangelogs\tests\Outputter;
 
 use PHPUnit\Framework\TestCase;
-use Spiriit\ComposerWriteChangelogs\OperationHandler\OperationHandler;
 use Spiriit\ComposerWriteChangelogs\Outputter\Outputter;
 use Spiriit\ComposerWriteChangelogs\tests\resources\FakeHandler;
 use Spiriit\ComposerWriteChangelogs\tests\resources\FakeOperation;
 use Spiriit\ComposerWriteChangelogs\tests\resources\FakeUrlGenerator;
-use Spiriit\ComposerWriteChangelogs\UrlGenerator\UrlGenerator;
 
 class OutputterTest extends TestCase
 {
-    /** @var Outputter */
-    private $SUT;
+    private Outputter $SUT;
 
-    /** @var OperationHandler[] */
-    private $operationHandlers;
+    private array $operationHandlers;
 
-    /** @var UrlGenerator[] */
-    private $urlGenerators;
+    private array $urlGenerators;
 
     protected function setUp(): void
     {
@@ -50,7 +45,7 @@ class OutputterTest extends TestCase
     /**
      * @test
      */
-    public function testItAddsOperation(): void
+    public function test_it_adds_operation(): void
     {
         $operation1 = new FakeOperation('');
         $this->SUT->addOperation($operation1);
@@ -78,7 +73,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsWithNoSupportedUrlGenerator(): void
+    public function test_it_outputs_with_no_supported_url_generator(): void
     {
         $this->SUT = new Outputter($this->operationHandlers, [
             new FakeUrlGenerator(false, '', ''),
@@ -103,7 +98,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsWithNoSupportedOperationHandler(): void
+    public function test_it_outputs_with_no_supported_operation_handler(): void
     {
         $this->SUT = new Outputter([
             new FakeHandler(false, '', ''),
@@ -121,7 +116,10 @@ TEXT;
         $this->assertSame($expectedOutput, $this->SUT->getOutput());
     }
 
-    public function testItOutputsRightText(): void
+    /**
+     * @test
+     */
+    public function it_outputs_right_text(): void
     {
         $this->SUT->addOperation(new FakeOperation('operation 1'));
         $this->SUT->addOperation(new FakeOperation('operation 2'));
@@ -143,7 +141,10 @@ TEXT;
         $this->assertSame($expectedOutput, $this->SUT->getOutput());
     }
 
-    public function testItOutputsNothingWithoutOperation(): void
+    /**
+     * @test
+     */
+    public function it_outputs_nothing_without_operation(): void
     {
         $expectedOutput = <<<TEXT
 <fg=green>No changelogs summary</fg=green>

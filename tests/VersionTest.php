@@ -16,15 +16,14 @@ use Spiriit\ComposerWriteChangelogs\Version;
 
 class VersionTest extends TestCase
 {
-    /** @var Version */
-    private $SUT;
+    private Version $SUT;
 
     /**
      * @test
      *
      * @return void
      */
-    public function testItKeepVersionFormats()
+    public function test_it_keep_version_formats()
     {
         $this->SUT = new Version('v1.0.0.0', 'v1.0.0', 'v1.0.0');
 
@@ -44,7 +43,7 @@ class VersionTest extends TestCase
      *
      * @return void
      */
-    public function testItDetectsDevVersion()
+    public function test_it_detects_dev_version()
     {
         $this->SUT = new Version('v1.0.0.0', 'v1.0.0', 'v1.0.0');
 

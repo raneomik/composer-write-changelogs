@@ -19,22 +19,19 @@ use Spiriit\ComposerWriteChangelogs\Config\ConfigLocator;
 
 class ConfigLocatorTest extends TestCase
 {
-    /** @var false|string|null */
-    private $localConfigPath;
+    private ?string $localConfigPath;
 
-    /** @var false|string|null */
-    private $globalConfigPath;
+    private ?string $globalConfigPath;
 
-    /** @var ConfigLocator */
-    private $SUT;
+    private ConfigLocator $SUT;
 
     /**
      * {@inheritdoc}
      */
     protected function setUp(): void
     {
-        $this->localConfigPath = realpath(__DIR__ . '/../fixtures/local');
-        $this->globalConfigPath = realpath(__DIR__ . '/../fixtures/home');
+        $this->localConfigPath = realpath(__DIR__ . '/../fixtures/local') ? realpath(__DIR__ . '/../fixtures/local') : null;
+        $this->globalConfigPath = realpath(__DIR__ . '/../fixtures/home') ? realpath(__DIR__ . '/../fixtures/home') : null;
 
         $config = new Config(false, $this->localConfigPath);
         $config->merge([
@@ -60,7 +57,7 @@ class ConfigLocatorTest extends TestCase
     /**
      * @test
      */
-    public function testItLocatesLocalConfig(): void
+    public function test_it_locates_local_config(): void
     {
         $key = 'my-local-config';
 
@@ -73,7 +70,7 @@ class ConfigLocatorTest extends TestCase
     /**
      * @test
      */
-    public function testItLocatesGlobalConfig(): void
+    public function test_it_locates_global_config(): void
     {
         $key = 'my-global-config';
 
@@ -86,7 +83,7 @@ class ConfigLocatorTest extends TestCase
     /**
      * @test
      */
-    public function testItDoesNotLocateNonExistingConfig(): void
+    public function test_it_does_not_locate_non_existing_config(): void
     {
         $key = 'my-non-existing-config';
 

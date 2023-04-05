@@ -18,8 +18,7 @@ use Spiriit\ComposerWriteChangelogs\Version;
 
 class GithubUrlGeneratorTest extends TestCase
 {
-    /** @var GithubUrlGenerator */
-    private $SUT;
+    private GithubUrlGenerator $SUT;
 
     protected function setUp(): void
     {
@@ -29,7 +28,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItSupportsGithubUrls(): void
+    public function test_it_supports_github_urls(): void
     {
         $this->assertTrue($this->SUT->supports('https://github.com/phpunit/phpunit-mock-objects.git'));
         $this->assertTrue($this->SUT->supports('https://github.com/symfony/console'));
@@ -39,7 +38,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItDoesNotSupportNonGithubUrls(): void
+    public function test_it_does_not_support_non_github_urls(): void
     {
         $this->assertFalse($this->SUT->supports('https://bitbucket.org/mailchimp/mandrill-api-php.git'));
         $this->assertFalse($this->SUT->supports('https://bitbucket.org/rogoOOS/rog'));
@@ -48,7 +47,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItGeneratesCompareUrlsWithOrWithoutGitExtensionInSourceUrl(): void
+    public function test_it_generates_compare_urls_with_or_without_git_extension_in_source_url(): void
     {
         $versionFrom = new Version('v1.0.0.0', 'v1.0.0', 'v1.0.0');
         $versionTo = new Version('v1.0.1.0', 'v1.0.1', 'v1.0.1');
@@ -77,7 +76,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItGeneratesCompareUrlsWithDevVersions(): void
+    public function test_it_generates_compare_urls_with_dev_versions(): void
     {
         $versionFrom = new Version('v.1.0.9999999.9999999-dev', 'dev-master', 'dev-master 1234abc');
         $versionTo = new Version('v1.0.1.0', 'v1.0.1', 'v1.0.1');
@@ -122,7 +121,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItGeneratesCompareUrlsAcrossForks(): void
+    public function test_it_generates_compare_urls_across_forks(): void
     {
         $versionFrom = new Version('v1.0.0.0', 'v1.0.0', 'v1.0.0');
         $versionTo = new Version('v1.0.1.0', 'v1.0.1', 'v1.0.1');
@@ -141,12 +140,12 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItDoesNotGenerateCompareUrlsForUnsupportedUrl(): void
+    public function test_it_does_not_generate_compare_urls_for_unsupported_url(): void
     {
         $versionFrom = new Version('v1.0.0.0', 'v1.0.0', 'v1.0.0');
         $versionTo = new Version('v1.0.1.0', 'v1.0.1', 'v1.0.1');
 
-        $this->assertFalse(
+        $this->assertNull(
             $this->SUT->generateCompareUrl(
                 '/home/toto/work/my-package',
                 $versionFrom,
@@ -155,7 +154,7 @@ class GithubUrlGeneratorTest extends TestCase
             )
         );
 
-        $this->assertFalse(
+        $this->assertNull(
             $this->SUT->generateCompareUrl(
                 'https://github.com/acme1/repo',
                 $versionFrom,
@@ -168,7 +167,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItThrowsExceptionWhenGeneratingCompareUrlsAcrossForksIfASourceUrlIsInvalid(): void
+    public function test_it_throws_exception_when_generating_compare_urls_across_forks_if_a_source_url_is_invalid(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Unrecognized url format for github.com ("https://github.com/acme2")');
@@ -187,7 +186,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItGeneratesCompareUrlsWithSshSourceUrl(): void
+    public function test_it_generates_compare_urls_with_ssh_source_url(): void
     {
         $versionFrom = new Version('v1.0.0.0', 'v1.0.0', 'v1.0.0');
         $versionTo = new Version('v1.0.1.0', 'v1.0.1', 'v1.0.1');
@@ -206,16 +205,16 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItDoesNotGenerateReleaseUrlsForDevVersion(): void
+    public function test_it_does_not_generate_release_urls_for_dev_version(): void
     {
-        $this->assertFalse(
+        $this->assertNull(
             $this->SUT->generateReleaseUrl(
                 'https://github.com/acme/repo',
                 new Version('9999999-dev', 'dev-master', 'dev-master 1234abc')
             )
         );
 
-        $this->assertFalse(
+        $this->assertNull(
             $this->SUT->generateReleaseUrl(
                 'https://github.com/acme/repo',
                 new Version('dev-fix/issue', 'dev-fix/issue', 'dev-fix/issue 1234abc')
@@ -226,7 +225,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItGeneratesReleaseUrls(): void
+    public function test_it_generates_release_urls(): void
     {
         $this->assertSame(
             'https://github.com/acme/repo/releases/tag/v1.0.1',
@@ -248,7 +247,7 @@ class GithubUrlGeneratorTest extends TestCase
     /**
      * @test
      */
-    public function testItGeneratesReleaseUrlWithSshSourceUrl(): void
+    public function test_it_generates_release_url_with_ssh_source_url(): void
     {
         $this->assertSame(
             'https://github.com/acme/repo/releases/tag/v1.0.1',

@@ -16,28 +16,20 @@ use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Package\Package;
 use PHPUnit\Framework\TestCase;
 use Spiriit\ComposerWriteChangelogs\OperationHandler\Install\InstallOutputFileHandler;
-use Spiriit\ComposerWriteChangelogs\OperationHandler\OperationHandler;
 use Spiriit\ComposerWriteChangelogs\OperationHandler\Uninstall\UninstallOutputFileHandler;
 use Spiriit\ComposerWriteChangelogs\OperationHandler\Update\UpdateOutputFileHandler;
 use Spiriit\ComposerWriteChangelogs\Outputter\FileOutputter;
-use Spiriit\ComposerWriteChangelogs\tests\resources\FakeHandler;
-use Spiriit\ComposerWriteChangelogs\tests\resources\FakeOperation;
 use Spiriit\ComposerWriteChangelogs\tests\resources\FakeUrlGenerator;
-use Spiriit\ComposerWriteChangelogs\UrlGenerator\UrlGenerator;
 
 class FileOutputterTest extends TestCase
 {
-    /** @var FileOutputter */
-    private $fileOutputterText;
+    private FileOutputter $fileOutputterText;
 
-    /** @var FileOutputter */
-    private $fileOutputterJSon;
+    private FileOutputter $fileOutputterJSon;
 
-    /** @var OperationHandler[] */
-    private $operationHandlers;
+    private array $operationHandlers;
 
-    /** @var UrlGenerator[] */
-    private $urlGenerators;
+    private array $urlGenerators;
 
     protected function setUp(): void
     {
@@ -66,7 +58,7 @@ class FileOutputterTest extends TestCase
     /**
      * @test
      */
-    public function testItAddsOperation(): void
+    public function test_it_adds_operation(): void
     {
         $operation = new InstallOperation(
             new Package('acme/my-project', 'v1.0.0.0', 'v1.0.0')
@@ -99,7 +91,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsWithNoSupportedUrlGenerator(): void
+    public function test_it_outputs_with_no_supported_url_generator(): void
     {
         $this->fileOutputterText = new FileOutputter($this->operationHandlers, []);
 
@@ -131,7 +123,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsWithNoSupportedOperationHandler(): void
+    public function test_it_outputs_with_no_supported_operation_handler(): void
     {
         $this->fileOutputterText = new FileOutputter([], []);
 
@@ -159,7 +151,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsRightText(): void
+    public function test_it_outputs_right_text(): void
     {
         $operation = new InstallOperation(
             new Package('acme/my-project', 'v1.0.0.0', 'v1.0.0')
@@ -192,7 +184,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsRightJson(): void
+    public function test_it_outputs_right_json(): void
     {
         $operation = new InstallOperation(
             new Package('acme/my-project', 'v1.0.0.0', 'v1.0.0')
@@ -215,7 +207,7 @@ TEXT;
     /**
      * @test
      */
-    public function testItOutputsNothingWithoutOperation(): void
+    public function test_it_outputs_nothing_without_operation(): void
     {
         $expectedOutput = <<<TEXT
 No changelogs summary
