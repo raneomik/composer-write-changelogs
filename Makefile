@@ -2,7 +2,7 @@
 SHELL:=/bin/bash
 
 LOW_PHP = 7.4
-HIGH_PHP = 8.1
+HIGH_PHP = '8.2'
 SF = symfony
 
 help:	## Shows this help hint
@@ -14,13 +14,10 @@ check-deps:	## Check php dependencies
 	$(SF) security:check
 
 check-code:	## Static code analysis
-check-code: cs psalm stan
+check-code: cs stan
 
 cs:		## Code Sniff fixer
 	vendor/bin/php-cs-fixer fix --verbose --allow-risky=yes --config .php-cs-fixer.php
-
-psalm:		## Psalm analysis
-	php vendor/bin/psalm --no-progress --show-info=true --no-cache
 
 stan:		## phpstan analysis
 	php vendor/bin/phpstan analyse
@@ -45,16 +42,15 @@ up-deps:	## Update to latest dependencies
 	 $(SF) composer require --no-progress --no-update --no-scripts --dev \
               symplify/coding-standard:* symplify/phpstan-rules:* \
               phpstan/phpstan-symfony:* ekino/phpstan-banned-code:* phpstan/phpstan-phpunit:* phpstan/extension-installer:* phpstan/phpstan:* \
-              psalm/plugin-symfony:* vimeo/psalm:* \
               infection/infection:*
 	echo $(HIGH_PHP) > .php-version
-	$(SF) composer update --no-interaction --no-progress -W
+	$(SF) composer config --no-plugins allow-plugins.phpstan/extension-installer true
+	$(SF) composer update --no-interaction --no-progress --prefer-dist -W
 
 
 down-deps:	## Downgrade to least supported dependencies
 	 $(SF) composer remove --no-progress --no-update --no-scripts --dev \
               symplify/* phpstan/* ekino/phpstan-banned-code \
-              psalm/plugin-symfony vimeo/psalm \
               infection/infection
 	echo $(LOW_PHP) > .php-version
 	$(SF) composer update --no-interaction --no-progress --prefer-lowest --prefer-stable -W
