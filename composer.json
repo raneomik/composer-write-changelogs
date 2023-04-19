@@ -27,7 +27,6 @@
         "ekino/phpstan-banned-code": "*",
         "friendsofphp/php-cs-fixer": "^3.0",
         "infection/infection": "*",
-        "phpstan/extension-installer": "*",
         "phpstan/phpstan": "*",
         "phpstan/phpstan-phpunit": "*",
         "phpstan/phpstan-symfony": "*",
@@ -38,8 +37,7 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "infection/extension-installer": true,
-            "phpstan/extension-installer": true
+            "infection/extension-installer": true
         }
     },
     "extra": {
