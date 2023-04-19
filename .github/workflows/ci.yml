@@ -17,6 +17,11 @@ jobs:
               with:
                 args: --config=.php-cs-fixer.php --diff --dry-run
 
+            - name: PHPStan
+              uses: php-actions/phpstan@v3
+              with:
+                configuration: phpstan.neon
+
     ci:
         name: Test PHP ${{ matrix.php-version }} ${{ matrix.name }}
         runs-on: ubuntu-latest
