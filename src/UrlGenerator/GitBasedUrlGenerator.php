@@ -46,14 +46,18 @@ abstract class GitBasedUrlGenerator implements UrlGenerator
 
             $sourceUrl = parse_url($sourceUrl);
 
-            if(is_array($sourceUrl)){
+            if(is_array($sourceUrl) && isset($sourceUrl['path']) && isset($sourceUrl['scheme']) && isset($sourceUrl['host'])){
                 $pos = strrpos($sourceUrl['path'], '.git');
+                $length = strrpos($sourceUrl['path'], '.git');
+
+                if(!$length)
+                    $length = null;
 
                 return sprintf(
                     '%s://%s%s',
                     $sourceUrl['scheme'],
                     $sourceUrl['host'],
-                    false === $pos ? $sourceUrl['path'] : substr($sourceUrl['path'], 0, strrpos($sourceUrl['path'], '.git'))
+                    false === $pos ? $sourceUrl['path'] : substr($sourceUrl['path'], 0, $length)
                 );
             } 
                 return "";
