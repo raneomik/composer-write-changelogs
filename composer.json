@@ -56,7 +56,7 @@
     },
     "scripts": {
         "cs": "vendor/bin/php-cs-fixer fix --verbose",
-        "test": "vendor/bin/simple-phpunit",
+        "test": "vendor/bin/phpunit",
         "stan": "vendor/bin/phpstan analyse",
         "infection": "XDEBUG_MODE=coverage vendor/bin/infection"
     }
