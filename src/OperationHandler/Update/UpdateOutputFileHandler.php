@@ -65,39 +65,8 @@ class UpdateOutputFileHandler extends AbstractUpdateHandler
 
         if (FileOutputter::JSON_FORMAT === $this->outputFormat) {
             return $this->getJsonOutput($initialPackage, $targetPackage, $versionFrom, $versionTo, $action, $urlGenerator);
-        }  
-            return $this->getTextOutput($initialPackage, $targetPackage, $versionFrom, $versionTo, $action, $urlGenerator);
-        
-
-        if ($urlGenerator) {
-            $compareUrl = $urlGenerator->generateCompareUrl(
-                $initialPackage->getSourceUrl(),
-                $versionFrom,
-                $targetPackage->getSourceUrl(),
-                $versionTo
-            );
-
-            if (!empty($compareUrl)) {
-                $output[] = sprintf(
-                    '   See changes: %s',
-                    $compareUrl
-                );
-            }
-
-            $releaseUrl = $urlGenerator->generateReleaseUrl(
-                $this->extractSourceUrl($operation),
-                $versionTo
-            );
-
-            if (!empty($releaseUrl)) {
-                $output[] = sprintf(
-                    '   Release notes: %s',
-                    $releaseUrl
-                );
-            }
         }
-
-        return $output;
+            return $this->getTextOutput($initialPackage, $targetPackage, $versionFrom, $versionTo, $action, $urlGenerator);
     }
 
     private function getJsonOutput(PackageInterface $initialPackage, PackageInterface $targetPackage, Version $versionFrom, Version $versionTo, string $action, ?UrlGenerator $urlGenerator): array
