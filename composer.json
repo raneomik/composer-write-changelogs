@@ -24,16 +24,21 @@
     "require-dev": {
         "composer/composer": "^1.0.0-alpha10@dev || ^2.0@dev",
         "composer/semver": "^1.2 || ^2.0 || ^3.2",
-        "ekino/phpstan-banned-code": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "infection/infection": "^0.26.6",
-        "phpstan/phpstan": "^1.10",
-        "symfony/phpunit-bridge": "^5.2"
+        "infection/infection": "*",
+        "phpstan/extension-installer": "*",
+        "phpstan/phpstan": "*",
+        "phpstan/phpstan-phpunit": "*",
+        "phpstan/phpstan-symfony": "*",
+        "symfony/phpunit-bridge": "^5.2",
+        "symplify/coding-standard": "*",
+        "symplify/phpstan-rules": "*"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "infection/extension-installer": true
+            "infection/extension-installer": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
