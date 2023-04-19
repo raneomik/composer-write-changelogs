@@ -144,7 +144,16 @@ class ChangelogsPlugin implements PluginInterface, EventSubscriberInterface
         }
 
         $this->doWriteSummaryFile();
+        //TODO: $this->handleWebhookCall();
     }
+
+    /*TODO: private function handleWebhookCall()
+    {
+        if (!empty($this->config->getWebhookPath())) {
+            //TODO init un call api vers l'adresse
+            // faire un service a part pour cette logique
+        }
+    }*/
 
     private function doWriteSummaryFile(): void
     {
