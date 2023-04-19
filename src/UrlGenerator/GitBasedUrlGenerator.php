@@ -39,19 +39,29 @@ abstract class GitBasedUrlGenerator implements UrlGenerator
      */
     protected function generateBaseUrl(?string $sourceUrl): string
     {
-        if ($this->isSshUrl($sourceUrl)) {
-            return $this->transformSshUrlIntoHttp($sourceUrl);
-        }
+        if($sourceUrl != null){
+            if ($this->isSshUrl($sourceUrl)) {
+                return $this->transformSshUrlIntoHttp($sourceUrl);
+            }
 
-        $sourceUrl = parse_url($sourceUrl);
-        $pos = strrpos($sourceUrl['path'], '.git');
+            $sourceUrl = parse_url($sourceUrl);
 
-        return sprintf(
-            '%s://%s%s',
-            $sourceUrl['scheme'],
-            $sourceUrl['host'],
-            false === $pos ? $sourceUrl['path'] : substr($sourceUrl['path'], 0, strrpos($sourceUrl['path'], '.git'))
-        );
+            if(is_array($sourceUrl)){
+                $pos = strrpos($sourceUrl['path'], '.git');
+
+                return sprintf(
+                    '%s://%s%s',
+                    $sourceUrl['scheme'],
+                    $sourceUrl['host'],
+                    false === $pos ? $sourceUrl['path'] : substr($sourceUrl['path'], 0, strrpos($sourceUrl['path'], '.git'))
+                );
+            } 
+                return "";
+            
+
+        } 
+            return "";
+        
     }
 
     /**

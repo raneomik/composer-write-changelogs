@@ -34,6 +34,10 @@ class WordPressUrlGenerator implements UrlGenerator
             return null;
         }
 
+        if($sourceUrlTo == null){
+            return null;
+        }
+
         if (preg_match('#plugins.svn.wordpress.org/(.*)/#', $sourceUrlTo, $matches)) {
             $plugin = $matches[1];
 
