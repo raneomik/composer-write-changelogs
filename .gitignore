@@ -6,4 +6,7 @@ phpunit.xml
 /vendor
 .idea/
 .php-version
-changelogs/
+log/
+cov/
+changelogs*
+tests*
