@@ -24,6 +24,7 @@
     "require-dev": {
         "composer/composer": "^1.0.0-alpha10@dev || ^2.0@dev",
         "composer/semver": "^1.2 || ^2.0 || ^3.2",
+        "ekino/phpstan-banned-code": "*",
         "friendsofphp/php-cs-fixer": "^3.0",
         "infection/infection": "*",
         "phpstan/extension-installer": "*",

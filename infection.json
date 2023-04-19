@@ -5,7 +5,8 @@
     ]
   },
   "logs": {
-    "text": "log\/infection.log"
+    "text": "log\/infection.log",
+    "html": "log\/infection.html"
   },
   "mutators": {
     "@default": true
