@@ -10,3 +10,5 @@ log/
 cov/
 changelogs*
 tests*
+
+composer.lock
