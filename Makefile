@@ -1,7 +1,7 @@
 .DEFAULT_GLOBAL = help
 SHELL:=/bin/bash
 
-LOW_PHP = 7.4
+LOW_PHP = '7.4'
 HIGH_PHP = '8.2'
 SF = symfony
 
@@ -26,7 +26,7 @@ lint: 		## Config files lint
 	vendor/bin/neon-lint .
 
 test: 		## Unit tests
-	php vendor/bin/simple-phpunit
+	$(SF) php vendor/bin/phpunit
 
 cover: 		## Unit tests with coverage
 	XDEBUG_MODE=coverage $(SF) php vendor/bin/simple-phpunit --coverage-xml=cov/xml --coverage-html=cov/html --log-junit=cov/junit.xml
@@ -39,18 +39,9 @@ infection: 	## Mutation tests
 ## Dependencies
 ##
 up-deps:	## Update to latest dependencies
-	 $(SF) composer require --no-progress --no-update --no-scripts --dev \
-              symplify/coding-standard:* symplify/phpstan-rules:* \
-              phpstan/phpstan-symfony:* ekino/phpstan-banned-code:* phpstan/phpstan-phpunit:* phpstan/extension-installer:* phpstan/phpstan:* \
-              infection/infection:*
 	echo $(HIGH_PHP) > .php-version
-	$(SF) composer config --no-plugins allow-plugins.phpstan/extension-installer true
 	$(SF) composer update --no-interaction --no-progress --prefer-dist -W
 
-
 down-deps:	## Downgrade to least supported dependencies
-	 $(SF) composer remove --no-progress --no-update --no-scripts --dev \
-              symplify/* phpstan/* ekino/phpstan-banned-code \
-              infection/infection
 	echo $(LOW_PHP) > .php-version
 	$(SF) composer update --no-interaction --no-progress --prefer-lowest --prefer-stable -W
