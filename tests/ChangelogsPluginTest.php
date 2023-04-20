@@ -31,6 +31,7 @@ use Composer\Repository\RepositoryInterface;
 use Composer\Script\ScriptEvents;
 use PHPUnit\Framework\TestCase;
 use Spiriit\ComposerWriteChangelogs\ChangelogsPlugin;
+use Spiriit\ComposerWriteChangelogs\Outputter\FileOutputter;
 
 class ChangelogsPluginTest extends TestCase
 {
@@ -75,7 +76,7 @@ class ChangelogsPluginTest extends TestCase
      */
     protected function tearDown(): void
     {
-        self::cleanTempDir();
+//        self::cleanTempDir();
     }
 
     /**
@@ -189,8 +190,8 @@ OUTPUT;
 
         $plugin->postUpdate();
 
-        $this->assertFileExists($this->tempDir . '/changelogs-' . date('Y-m-d') . '.txt');
-        $fileContent = file_get_contents($this->tempDir . '/changelogs-' . date('Y-m-d') . '.txt');
+        $this->assertFileExists($this->tempDir . '/changelogs-' . date('Y-m-d') . '-' . date('h:i') . '.txt');
+        $fileContent = file_get_contents($this->tempDir . '/changelogs-' . date('Y-m-d') . '-' . date('h:i') . '.txt');
         $expectedContent = 'Changelogs summary:
 
  - foo/bar updated from v1.0.0 to v1.0.1 patch
@@ -223,8 +224,8 @@ OUTPUT;
 
         $plugin->postUpdate();
 
-        $this->assertFileExists($this->tempDir . '/changelogs-' . date('Y-m-d') . '.json');
-        $fileContent = file_get_contents($this->tempDir . '/changelogs-' . date('Y-m-d') . '.json');
+        $this->assertFileExists($this->tempDir . '/changelogs-' . date('Y-m-d') . '-' . date('h:i') . '.json');
+        $fileContent = file_get_contents($this->tempDir . '/changelogs-' . date('Y-m-d') . '-' . date('h:i') . '.json');
         $expectedContent = '[{"operation":"update","package":"foo/bar","action":"updated","phrasing":"updated from","versionFrom":"v1.0.0","versionTo":"v1.0.1","semver":"patch","changesUrl":"https://github.com/foo/bar/compare/v1.0.0...v1.0.1","releaseUrl":"https://github.com/foo/bar/releases/tag/v1.0.1"}]';
         $this->assertStringMatchesFormat($expectedContent, $fileContent);
     }
