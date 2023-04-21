@@ -1,15 +1,16 @@
 phpunit.xml
 .phpunit.result.cache
-
 .php-cs-fixer.cache
+composer.lock
+.php-version
+package-lock.json
+
+test/temp/*
 
 /vendor
 .idea/
-.php-version
 log/
 cov/
 test/temp/
-test/temp/*
 changelogs*
-
-composer.lock
+.gitlab-ci-local/
