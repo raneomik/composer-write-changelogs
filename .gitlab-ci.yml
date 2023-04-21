@@ -6,11 +6,13 @@ stages:
   - test
 
 .common-needs: &common-needs
+  image: spiriitlabs/symfony-cli:8.2-minimalist
   needs:
     - job: composer
       artifacts: true
 
 composer:
+  image: spiriitlabs/symfony-cli:8.2-minimalist
   stage: dependencies
   script:
     - symfony composer install
@@ -20,12 +22,14 @@ composer:
       - vendor
 
 php-cs-fix:
+  image: spiriitlabs/symfony-cli:8.2-minimalist
   <<: *common-needs
   stage: test-cs
   script:
     - vendor/bin/php-cs-fixer fix --verbose --allow-risky=yes --config .php-cs-fixer.php
 
 php-stan:
+  image: spiriitlabs/symfony-cli:8.2-minimalist
   <<: *common-needs
   stage: test-cs
   script:
