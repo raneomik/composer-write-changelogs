@@ -30,6 +30,7 @@ class ConfigBuilder
         $changelogsDirPath = null;
         $outputFileFormat = FileOutputter::TEXT_FORMAT;
         $writeSummaryFile = true;
+        $webhookUrl = null;
 
         if (array_key_exists('gitlab-hosts', $extra)) {
             if (!is_array($extra['gitlab-hosts'])) {
@@ -68,7 +69,15 @@ class ConfigBuilder
             }
         }
 
-        return new Config($gitlabHosts, $changelogsDirPath, $outputFileFormat, $writeSummaryFile);
+        if(array_key_exists('webhook-url', $extra)){
+            if(0 === strlen($extra['webhook-url'])){
+                $this->warnings[] = '"webhook-url" is specified but empty, ignoring.';
+            }else {
+                $webhookUrl = $extra['webhook-url'];
+            }
+        }
+
+        return new Config($gitlabHosts, $changelogsDirPath, $outputFileFormat, $writeSummaryFile, $webhookUrl);
     }
 
     public function getWarnings(): array
