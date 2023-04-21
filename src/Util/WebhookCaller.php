@@ -7,6 +7,7 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use function _PHPStan_532094bc1\RingCentral\Psr7\str;
 
 class WebhookCaller
 {
@@ -29,6 +30,9 @@ class WebhookCaller
     {
         $response = $this->client->request('POST', "", [
             'body' => $this->stringData,
+            'headers' => [
+                'Content-Type' => 'text/plain',
+            ]
         ]);
 
         return $response->getContent();

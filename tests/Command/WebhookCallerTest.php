@@ -42,5 +42,4 @@ class WebhookCallerTest extends TestCase
             self::assertEquals('ok', $caller->callWebhook());
         }
     }
-
 }
