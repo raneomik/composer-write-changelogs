@@ -1,47 +1,59 @@
-image: php:latest
+image: spiriitlabs/symfony-cli:8.2-minimalist
 
-cache:
-  paths:
-    - vendor/
+stages:
+  - dependencies
+  - test-cs
+  - test
 
-before_script:
-  - sudo apt-get update -yqq
-  - apt-get install -yqq git libpq-dev libcurl4-gnutls-dev libicu-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev libonig-dev libzip-dev
-  - docker-php-ext-install mbstring pdo_pgsql curl intl gd xml zip bz2 opcache
-  - pecl install xdebug
-  - docker-php-ext-enable xdebug
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install
+.common-needs: &common-needs
+  needs:
+    - job: composer
+      artifacts: true
 
-code-stander-test:
-  stage: test
+composer:
+  stage: dependencies
+  script:
+    - symfony composer install
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - vendor
+
+php-cs-fix:
+  <<: *common-needs
+  stage: test-cs
   script:
     - vendor/bin/php-cs-fixer fix --verbose --allow-risky=yes --config .php-cs-fixer.php
-    - php vendor/bin/phpstan analyse
 
-cs:
+php-stan:
+  <<: *common-needs
+  stage: test-cs
   script:
-    - vendor/bin/php-cs-fixer fix --verbose --allow-risky=yes --config .php-cs-fixer.php
-    - vendor/bin/phpstan analyse
+    - symfony php vendor/bin/phpstan analyse
 
 test-7.4:
+  <<: *common-needs
+  image: spiriitlabs/symfony-cli:7.4-minimalist
   stage: test
   script:
     - echo '7.4' > .php-version
-    - composer update
+    - symfony composer update
     - symfony php vendor/bin/phpunit
 
 test-8.1:
+  <<: *common-needs
+  image: spiriitlabs/symfony-cli:8.1-minimalist
   stage: test
   script:
     - echo '8.1' > .php-version
-    - composer update
+    - symfony composer update
     - symfony php vendor/bin/phpunit
 
 test-8.2:
+  <<: *common-needs
   stage: test
   script:
     - echo '8.2' > .php-version
-    - composer update
+    - symfony composer update
     - symfony php vendor/bin/phpunit
 
